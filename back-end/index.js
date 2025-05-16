@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Rotte principali
-app.use('/api/users', usersRouter);
+app.use('/users', usersRouter);
 
 // Route di prova
 app.get('/', (req, res) => {
