@@ -39,8 +39,9 @@ export const createUser = async (req, res) => {
   }
 
   try {
-    const [user] = await db('users').insert({ name, email }).returning(['id']); // PostgreSQL richiede .returning()
-    res.status(201).json({ id: user.id, name, email }); // l'id viene gestito in automatico da supabase
+    const result = await db('users').insert({ name, email }).returning(['id']);
+    const user = result[0];
+    res.status(201).json({ id: user.id, name, email });
   } catch (error) {
     console.error("Errore nel salvataggio dell'utente:", error);
     res.status(500).json({ error: 'Errore nella creazione dell\'utente' });
