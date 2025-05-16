@@ -32,6 +32,8 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
   const { name, email } = req.body;
 
+  console.log("Dati ricevuti dal front-end:", req.body);
+
   if (!name || !email) {
     return res.status(400).json({ error: 'Nome e email sono obbligatori' });
   }
@@ -40,6 +42,7 @@ export const createUser = async (req, res) => {
     const [id] = await db('users').insert({ name, email }); // destrutturazione: salva nella variabile [id] il primo valore dell'array restituito dalla query .insert
     res.status(201).json({ id, name, email }); // l'id si crea grazie all'auto increment che si attiva ogni volta che si aggiunge una nuova riga
   } catch (error) {
+    console.error("Errore nel salvataggio dell'utente:", error);
     res.status(500).json({ error: 'Errore nella creazione dell\'utente' });
   }
 };
