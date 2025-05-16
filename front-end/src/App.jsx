@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
+const URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: '', email: '' });
@@ -8,7 +10,7 @@ function App() {
   // Funzione per ottenere tutti gli utenti dal back-end
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch(URL);
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -21,7 +23,7 @@ function App() {
     if (!newUser.name || !newUser.email) return; // se non inserisci tutti i dati, il submit non parte
 
     try {
-      const response = await fetch('/api/users', {
+      const response = await fetch(URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser),
@@ -39,7 +41,7 @@ function App() {
   // Funzione per eliminare un utente
   const deleteUser = async (id) => {
     try {
-      await fetch(`/api/users/${id}`, { method: 'DELETE' });
+      await fetch(`${URL}/${id}`, { method: 'DELETE' });
       fetchUsers(); // aggiorna la lista
     } catch (error) {
       console.error('Errore nel cancellare l\'utente:', error);
