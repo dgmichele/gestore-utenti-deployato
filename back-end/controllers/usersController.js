@@ -39,8 +39,8 @@ export const createUser = async (req, res) => {
   }
 
   try {
-    const [id] = await db('users').insert({ name, email }); // destrutturazione: salva nella variabile [id] il primo valore dell'array restituito dalla query .insert
-    res.status(201).json({ id, name, email }); // l'id si crea grazie all'auto increment che si attiva ogni volta che si aggiunge una nuova riga
+    const [user] = await db('users').insert({ name, email }).returning(['id']); // PostgreSQL richiede .returning()
+    res.status(201).json({ id: user.id, name, email }); // l'id viene gestito in automatico da supabase
   } catch (error) {
     console.error("Errore nel salvataggio dell'utente:", error);
     res.status(500).json({ error: 'Errore nella creazione dell\'utente' });
