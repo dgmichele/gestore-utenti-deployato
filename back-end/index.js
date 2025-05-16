@@ -3,12 +3,12 @@ import dotenv from 'dotenv';
 import usersRouter from './routes/users.js';
 import cors from 'cors';
 
-app.use(cors());
-
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 // Middleware per leggere il body delle richieste in JSON
 app.use(express.json());
