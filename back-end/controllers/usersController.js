@@ -39,9 +39,11 @@ export const createUser = async (req, res) => {
   }
 
   try {
-    const result = await db('users').insert({ name, email }).returning(['id']);
-    const user = result[0];
-    res.status(201).json({ id: user.id, name, email });
+    const [user] = await db('users')
+      .insert({ name, email })
+      .returning(['id', 'name', 'email']); // già ritorni tutto
+
+    res.status(201).json(user); // evita di ricreare l’oggetto manualmente
   } catch (error) {
     console.error("Errore nel salvataggio dell'utente:", error);
     res.status(500).json({ error: 'Errore nella creazione dell\'utente' });
