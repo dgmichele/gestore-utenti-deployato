@@ -6,6 +6,7 @@ const URL = import.meta.env.VITE_API_URL;
 function App() {
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({ name: '', email: '' });
+  const [loading, setLoading] = useState(true);
 
   // Funzione per ottenere tutti gli utenti dal back-end
   const fetchUsers = async () => {
@@ -15,6 +16,8 @@ function App() {
       setUsers(data);
     } catch (error) {
       console.error('Errore nel recuperare gli utenti:', error);
+    } finally {
+      setLoading(false); // disattiva il caricamento una volta finita la richiesta
     }
   };
 
@@ -81,14 +84,18 @@ const addUser = async (e) => {
       </form>
 
       <h2>Lista Utenti</h2>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            {user.name} ({user.email})
-            <button onClick={() => deleteUser(user.id)}>Elimina</button>
-          </li>
-        ))}
-      </ul>
+      {loading ? ( // se sta ancora caricando, mostra il messaggio
+        <p>⏳ Sto avviando il server... Attendi circa 1 minuto, grazie per la pazienza!</p>
+      ) : (
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>
+              {user.name} ({user.email})
+              <button onClick={() => deleteUser(user.id)}>Elimina</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
