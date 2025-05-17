@@ -6,7 +6,7 @@ export const getAllUsers = async (req, res) => {
     const users = await db('users').select('*'); // SELECT * FROM users;
     res.json(users);
   } catch (error) {
-    console.error('Errore dettagliato:', error);
+    console.error('Errore dettagliato:', error); // approfondimento errore
     res.status(500).json({ error: 'Errore nel recuperare gli utenti' });
   }
 };
@@ -32,7 +32,7 @@ export const getUserById = async (req, res) => {
 export const createUser = async (req, res) => {
   const { name, email } = req.body;
 
-  console.log("Dati ricevuti dal front-end:", req.body);
+  console.log("Dati ricevuti dal front-end:", req.body); // controllo corpo della richiesta
 
   if (!name || !email) {
     return res.status(400).json({ error: 'Nome e email sono obbligatori' });
@@ -41,9 +41,9 @@ export const createUser = async (req, res) => {
   try {
     const [user] = await db('users')
       .insert({ name, email })
-      .returning(['id', 'name', 'email']); // già ritorni tutto
+      .returning(['id', 'name', 'email']); // postegreSQl necessita del returnig (l'id è gestito in automatico con stringhe random grazie a uuid di Supabase)
 
-    res.status(201).json(user); // evita di ricreare l’oggetto manualmente
+    res.status(201).json(user);
   } catch (error) {
     console.error("Errore nel salvataggio dell'utente:", error);
     res.status(500).json({ error: 'Errore nella creazione dell\'utente' });
