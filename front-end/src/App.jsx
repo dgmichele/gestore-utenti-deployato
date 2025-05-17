@@ -18,25 +18,32 @@ function App() {
     }
   };
 
-  // Funzione per creare un nuovo utente
-  const addUser = async () => {
-    if (!newUser.name || !newUser.email) return; // se non inserisci tutti i dati, il submit non parte
+// Funzione per creare un nuovo utente
+const addUser = async (e) => {
+  e.preventDefault(); // Evita il refresh del form
 
-    try {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newUser),
-      });
+  if (!newUser.name || !newUser.email) return; // se non inserisci tutti i dati, il submit non parte
 
-      if (response.ok) {
-        setNewUser({ name: '', email: '' }); // resetta l'input dopo il submit
-        fetchUsers(); // aggiorna la lista
-      }
-    } catch (error) {
-      console.error('Errore nel creare l\'utente:', error);
+  try {
+    const response = await fetch(URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newUser),
+    });
+
+    if (response.ok) {
+      const createdUser = await response.json(); // Ricevi l'utente appena creato dal backend
+
+      setUsers((prevUsers) => [...prevUsers, createdUser]); // Aggiorna localmente la lista
+
+      setNewUser({ name: '', email: '' }); // Resetta il form
+    } else {
+      console.error("Errore nel creare l'utente - risposta non OK");
     }
-  };
+  } catch (error) {
+    console.error("Errore nel creare l'utente:", error);
+  }
+};
 
   // Funzione per eliminare un utente
   const deleteUser = async (id) => {
